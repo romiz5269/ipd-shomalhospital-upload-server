@@ -12,6 +12,7 @@ const {performance} = require("perf_hooks");
 performance.eventLoopUtilization();
 dotenv.config();
 const app = express();
+const PORT = process.env.PORT;
 
 const UPLOAD_DIR = path.join(__dirname, "uploads");
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, {recursive: true});
@@ -84,7 +85,7 @@ app.post("/upload/delete", (req, res) => {
   if (bearer !== process.env.CDN_SERVICE_TOKEN) {
     return res.status(401).json({error: "Unauthorized"});
   }
-  console.log(req)
+  console.log(req);
   const {fileKey, fileUrl} = req.body;
   const fileName = fileKey ?? fileUrl?.split("/").pop();
   if (!fileName) return res.status(400).json({error: "file key/url missing"});
@@ -175,4 +176,4 @@ app.delete("/logs/clear", (req, res) => {
       .json({status: "OK", message: "لاگ ها با موفقیت پاک شدند"});
   });
 });
-app.listen(4000, () => console.log("CDN server listening on 4000"));
+app.listen(PORT, () => console.log(`CDN server listening on ${PORT}`));
